@@ -1,0 +1,26 @@
+# 构建产物
+build/
+out/
+*.exe
+*.obj
+*.o
+*.a
+*.lib
+*.pdb
+*.ilk
+test_mmc5983ma
+
+# IDE
+.vs/
+.vscode/
+*.uvguix.*
+*.uvoptx
+MDK-ARM/*/Listings/
+MDK-ARM/*/Objects/
+Objects/
+Listings/
+
+# 系统
+Thumbs.db
+desktop.ini
+.DS_Store
