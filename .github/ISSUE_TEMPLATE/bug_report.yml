@@ -1,0 +1,114 @@
+name: Bug report
+description: Report a problem with the MMC5983MA driver
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. The details below usually decide whether this is a wiring problem,
+        a bus problem or a driver problem.
+
+  - type: dropdown
+    id: chip
+    attributes:
+      label: Sensor
+      description: Which part are you using?
+      options:
+        - MMC5983MA
+        - Other / not sure
+    validations:
+      required: true
+
+  - type: input
+    id: mcu
+    attributes:
+      label: MCU / board
+      placeholder: STM32G474CEU6, custom board
+    validations:
+      required: true
+
+  - type: dropdown
+    id: toolchain
+    attributes:
+      label: Toolchain
+      options:
+        - Keil MDK, AC6 (armclang)
+        - Keil MDK, AC5 (armcc)
+        - GCC (arm-none-eabi)
+        - GCC (Linux / host)
+        - MSVC
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Driver version
+      description: Release tag or commit hash
+      placeholder: v1.0.0
+    validations:
+      required: true
+
+  - type: input
+    id: bus_config
+    attributes:
+      label: I2C settings
+      description: Address and clock speed
+      placeholder: 0x30 (7-bit), 400 kHz
+
+  - type: dropdown
+    id: symptom
+    attributes:
+      label: What happens?
+      options:
+        - Product ID does not read 0x30
+        - Measurement never completes (timeout)
+        - Data reads as zero or constant
+        - Data looks scaled or rotated incorrectly
+        - Temperature reads out of range
+        - Build or link error
+        - Unit test failure
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Call mmc_init() ...
+        2. Then mmc_measure() ...
+        3. Observed ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected vs actual
+      placeholder: |
+        Expected: ...
+        Actual: ...
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Already checked
+      options:
+        - label: SDA and SCL have pull-up resistors
+        - label: The 7-bit address is 0x30 and the HAL call uses the shifted form
+        - label: At least 10 ms passed after a soft reset
+        - label: The measurement was polled to completion before reading
+        - label: I reproduced the problem with the current main branch
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Logs or code
+      description: Paste register dumps or a minimal reproducer
+      render: shell
