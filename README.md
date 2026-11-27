@@ -87,6 +87,8 @@ mmc_set_bandwidth(&mag, MMC_BW_2MS_400HZ);
 
 状态码包括 `MMC_OK`、`MMC_ERR_PARAM`、`MMC_ERR_BUS`、`MMC_ERR_ID`、`MMC_ERR_STATE` 和 `MMC_ERR_TIMEOUT`。
 
+直接写 `CTRL1` 后，驱动会同步带宽和通道屏蔽位的内部缓存。写入 `SW_RST` 时仍需等待 10 ms，再继续访问寄存器。
+
 ## 配置
 
 带宽与单次测量时间（`CTRL1[1:0]`）：

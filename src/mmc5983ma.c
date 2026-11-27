@@ -75,7 +75,8 @@ static float raw_to_gauss(uint32_t raw)
  */
 static mmc_status_t write_ctrl1(mmc_t *dev, uint8_t mask, uint8_t val)
 {
-    uint8_t new_val = (uint8_t)((dev->ctrl1 & (uint8_t)~mask) | (val & mask));
+    const uint8_t preserved_mask = (uint8_t)(MMC_CTRL1_YZ_INHIBIT | MMC_CTRL1_X_INHIBIT);
+    uint8_t new_val = (uint8_t)((dev->ctrl1 & preserved_mask) | (val & mask));
     mmc_status_t st = bus_write(dev, MMC_REG_CTRL1, &new_val, 1);
     if (st == MMC_OK) {
         dev->ctrl1 = new_val;
@@ -97,7 +98,12 @@ mmc_status_t mmc_read_reg(mmc_t *dev, uint8_t reg, uint8_t *value)
 
 mmc_status_t mmc_write_reg(mmc_t *dev, uint8_t reg, uint8_t value)
 {
-    return bus_write(dev, reg, &value, 1);
+    mmc_status_t st = bus_write(dev, reg, &value, 1);
+    if (st == MMC_OK && reg == MMC_REG_CTRL1) {
+        dev->ctrl1 = value;
+        dev->bw = (uint8_t)(value & (MMC_CTRL1_BW1 | MMC_CTRL1_BW0));
+    }
+    return st;
 }
 
 mmc_status_t mmc_soft_reset(mmc_t *dev)

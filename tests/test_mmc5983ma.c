@@ -153,6 +153,13 @@ static void test_bandwidth(void)
     CHECK(dev.bw == (uint8_t)MMC_BW_2MS_400HZ, "dev.bw updated");
 
     CHECK(mmc_set_bandwidth(&dev, (mmc_bw_t)4) == MMC_ERR_PARAM, "invalid bandwidth rejected");
+
+    CHECK(mmc_write_reg(&dev, MMC_REG_CTRL1, MMC_CTRL1_YZ_INHIBIT) == MMC_OK,
+          "direct CTRL1 write accepted");
+    CHECK(mmc_set_bandwidth(&dev, MMC_BW_4MS_200HZ) == MMC_OK,
+          "bandwidth update after direct CTRL1 write");
+    CHECK(g_regs[MMC_REG_CTRL1] == (MMC_CTRL1_YZ_INHIBIT | 1u),
+          "CTRL1 shadow stays synchronized");
 }
 
 /**
